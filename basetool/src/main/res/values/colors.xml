@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_333"> #333</color>
+    <color name="text_666"> #666</color>
+    <color name="text_999"> #999</color>
+    <color name="color_main">#FFAA05</color>
+    <color name="color_main_trans">#66FFAA05</color>
+    <color name="line_ccc">#ccc</color>
+    <color name="ec">#ececec</color>
+    <color name="f8">#f8f8f8</color>
+    <color name="golden_stars">#FFC619</color>
+</resources>
