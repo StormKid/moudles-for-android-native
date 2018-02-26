@@ -37,7 +37,7 @@ import java.io.IOException;
 public class CameraManager {
 
 	private static final String TAG = CameraManager.class.getSimpleName();
-
+	public static final String FLAG = "capture_mask_top";
 	private final Context context;
 	private final CameraConfigurationManager configManager;
 	private Camera camera;

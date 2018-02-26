@@ -21,7 +21,6 @@ class DimenUtil private constructor(context: Context) {
 
     private val DEFAULT_MARGIN = 12
 
-
     companion object {
         @JvmStatic
         fun getInstance(context: Context): DimenUtil {

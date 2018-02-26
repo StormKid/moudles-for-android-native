@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -290,6 +291,7 @@ public class CaptureActivity extends AppCompatActivity
      * 适配
      */
     protected void initDimen() {
+        String flag = getIntent().getStringExtra(CameraManager.FLAG);
         DimenUtil instance = DimenUtil.getInstance(this);
         int imageSize = instance.getDimen(30);
         int viewSize = instance.getDimen(150);
@@ -323,6 +325,8 @@ public class CaptureActivity extends AppCompatActivity
         scanCropView.setLayoutParams(layout);
         RelativeLayout.LayoutParams textParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, textSize);
         capture_mask_top.setLayoutParams(textParam);
+        flag = TextUtils.isEmpty(flag)?"请扫描二维码":flag;
+        capture_mask_top.setText(flag);
         DimenUtil.getInstance(this).setTextSize(14,capture_mask_top);
     }
 
