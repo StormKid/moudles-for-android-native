@@ -37,7 +37,6 @@ import com.moudle.zxing.utils.BeepManager;
 import com.moudle.zxing.utils.CaptureActivityHandler;
 import com.moudle.zxing.utils.DimenUtil;
 import com.moudle.zxing.utils.InactivityTimer;
-import com.yanzhenjie.permission.*;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -69,7 +68,6 @@ public class CaptureActivity extends AppCompatActivity
     }
     private boolean isHasSurface = false;
     private boolean isLighting;
-    private static final int REQUEST_CODE = 10086;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -99,7 +97,6 @@ public class CaptureActivity extends AppCompatActivity
 
     }
 
-    @PermissionYes(REQUEST_CODE)
     public void yes(){
         cameraManager = new CameraManager(getApplication());
         handler = null;
@@ -112,25 +109,12 @@ public class CaptureActivity extends AppCompatActivity
     }
 
 
-    @PermissionNo(REQUEST_CODE)
-    public void no(){
-
-    }
 
 
     @Override
     protected void onResume() {
-        if (AndPermission.hasPermission(this, Permission.CAMERA)) yes();
-        else {
-            isHasSurface = true;
-            AndPermission.with(this).permission(Permission.CAMERA).requestCode(REQUEST_CODE).rationale(new RationaleListener() {
-                @Override
-                public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
-                    AndPermission.rationaleDialog(CaptureActivity.this, rationale).show();
-                }
-            }).callback(this).start();
-        }
         super.onResume();
+        yes();
     }
 
     @Override
