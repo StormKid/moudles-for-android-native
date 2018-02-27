@@ -7,7 +7,6 @@ import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.FileCallback
 import com.lzy.okgo.model.Progress
 import com.lzy.okgo.model.Response
-import com.moudle.basetool.net.MyIntentCallback
 import com.moudle.basetool.net.OkTools.inner.BASE_URL
 import com.moudle.basetool.net.OkTools.inner.file
 import com.moudle.basetool.net.OkTools.inner.fileKey

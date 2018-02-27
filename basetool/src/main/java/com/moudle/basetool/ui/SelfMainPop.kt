@@ -13,17 +13,18 @@ import android.widget.PopupWindow
 /**
  * Created by ke_li on 2018/2/27.
  */
-abstract class SelfMainPop(val context: Context) : PopupWindow() {
+abstract class SelfMainPop(var context: Context) : PopupWindow() {
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         contentView = inflater.inflate(initLayout(), null)
         width = context.resources.displayMetrics.widthPixels
         height = WindowManager.LayoutParams.MATCH_PARENT
-        isFocusable = true
+//        isFocusable = true
         isOutsideTouchable = true
         update()
         val dw = ColorDrawable(0)
         setBackgroundDrawable(dw)
+        contentView.setOnClickListener { if (isShowing) dismiss()}
         initPop()
     }
 
@@ -32,7 +33,7 @@ abstract class SelfMainPop(val context: Context) : PopupWindow() {
 
     abstract fun initPop()
 
-    fun showPopupWindow(parent: View) {
+   open fun showPopupWindow(parent: View) {
         if (!isShowing) {
             if (Build.VERSION.SDK_INT >= 24) {
                 // 适配 android 7.0
@@ -49,4 +50,6 @@ abstract class SelfMainPop(val context: Context) : PopupWindow() {
         }
 
     }
+
+
 }
