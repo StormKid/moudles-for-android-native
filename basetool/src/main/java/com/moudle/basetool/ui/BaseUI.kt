@@ -53,7 +53,6 @@ abstract class BaseActivity : AutoLayoutActivity() {
  */
 abstract class BaseFragment : Fragment() {
 
-    private lateinit var myPermissionInterf: MyPermissionInterf
     private var isMeet = true
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(getLayout(), container, false)
@@ -84,9 +83,6 @@ abstract class BaseFragment : Fragment() {
     protected abstract fun initView()
     protected abstract fun initEvent()
 
-    protected fun setonPermissionListener(myPermissionInterf: MyPermissionInterf) {
-        this.myPermissionInterf = myPermissionInterf
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -131,6 +127,3 @@ abstract class BaseApplication : Application() {
 }
 
 
-interface MyPermissionInterf {
-    fun permissionCheck(permission: String)
-}

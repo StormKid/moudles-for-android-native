@@ -4,10 +4,10 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion sdk_version
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion sdk_version
         versionCode 1
         versionName "1.0"
     }
@@ -30,18 +30,18 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    api 'com.android.support:appcompat-v7:27.+'
+    api "com.android.support:appcompat-v7:$v7_version"
     //网络请求
     api 'com.lzy.net:okgo:3.+'
     //自适应布局
     api 'com.zhy:autolayout:1.+'
-    api 'com.android.support:recyclerview-v7:27.+'
+    api "com.android.support:recyclerview-v7:$v7_version"
     api 'com.yanzhenjie:permission:2.+'
     api 'com.google.code.gson:gson:2.+'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api files('libs/umeng-analytics-7.4.1.jar')
     api files('libs/umeng-common-1.4.1.jar')
-    api 'com.android.support:design:27.+'
+    api "com.android.support:design:$v7_version"
     api 'org.simple:androideventbus:1.+'
     //适配的tablayout
     implementation 'jp.wasabeef:glide-transformations:3.+'
