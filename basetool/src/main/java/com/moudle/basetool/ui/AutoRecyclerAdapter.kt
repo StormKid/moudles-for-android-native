@@ -13,7 +13,7 @@ import com.zhy.autolayout.utils.AutoUtils
  */
 abstract class AutoRecyclerAdapter(private val context: Context) : Adapter<AutoRecyclerAdapter.AutoViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): AutoViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AutoViewHolder {
         val view = LayoutInflater.from(context).inflate(getResourceId(), parent, false)
         return setViewHolder(view)
     }
@@ -22,7 +22,7 @@ abstract class AutoRecyclerAdapter(private val context: Context) : Adapter<AutoR
 
     abstract fun setViewHolder(view: View):AutoViewHolder
 
-   open inner class AutoViewHolder(val view:View):RecyclerView.ViewHolder(view){
+   open class AutoViewHolder(val view:View):RecyclerView.ViewHolder(view){
         init {
             AutoUtils.autoSize(view)
         }

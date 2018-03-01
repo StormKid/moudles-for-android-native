@@ -67,7 +67,7 @@ class OkTools private constructor() {
             inner.file = File("")
             inner.fileList = ArrayList()
             inner.requestBody = ""
-            inner.BASE_URL = "https://www.lovexiami.com/wxb/customer-mobile/"
+            inner.BASE_URL = "http://172.16.80.100:93/ylb/api/"
             inner.url = ""
         }
 

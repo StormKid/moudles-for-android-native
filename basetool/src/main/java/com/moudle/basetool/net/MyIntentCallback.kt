@@ -7,10 +7,10 @@ import com.lzy.okgo.OkGo
 import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
 import com.lzy.okgo.request.base.Request
-import org.json.JSONObject
 import com.moudle.basetool.utils.Constants.head
 import com.moudle.basetool.utils.ManagerUtils
 import com.moudle.basetool.utils.TokenUtil
+import org.json.JSONObject
 
 
 /**
@@ -40,18 +40,17 @@ class MyIntentCallback(val context: Context, private val tag: Any, private val c
         if (response!!.code() == 200) {
             if (response.body() != null) {
                 val obj = JSONObject(response.body())
-                val message = obj.optString("message")
-                val success = obj.optBoolean("success")
-                val code = obj.optInt("code")
-                    if (success) {
-                        val content = obj.optString("content")
-                        if (TextUtils.isEmpty(content)) {
+                val message = obj.optString("msg")
+                val code = obj.optString("code")
+                    if (code == "0") {
+                        val result = obj.optString("result")
+                        if (TextUtils.isEmpty(result)) {
                             callbackNormal.success("")
                         } else {
                             when {
-                                content[0].equals("{".toCharArray()[0], true) -> callbackNormal.success(content)
-                                content[0].equals("[".toCharArray()[0], true) -> callbackNormal.success("{\"content\":$content}")
-                                else -> callbackNormal.success(content)
+                                result[0].equals("{".toCharArray()[0], true) -> callbackNormal.success(result)
+                                result[0].equals("[".toCharArray()[0], true) -> callbackNormal.success("{\"result\":$result}")
+                                else -> callbackNormal.success(result)
                             }
                         }
                     } else {
