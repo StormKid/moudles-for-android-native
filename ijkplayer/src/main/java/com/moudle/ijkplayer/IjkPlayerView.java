@@ -916,7 +916,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (isFullscreen) {
             // 高度扩展为横向全屏
-            layoutParams.height = mWidthPixels;
+            layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         } else {
             // 还原高度
             layoutParams.height = mInitHeight;
