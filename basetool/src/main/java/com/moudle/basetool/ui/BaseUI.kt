@@ -1,6 +1,5 @@
 package com.moudle.basetool
 
-import android.app.Application
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import com.lzy.okgo.OkGo
 import com.lzy.okgo.https.HttpsUtils
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor
+import com.qihoo360.replugin.RePluginApplication
 import com.umeng.commonsdk.UMConfigure
 import com.zhy.autolayout.AutoLayoutActivity
 import okhttp3.OkHttpClient
@@ -94,7 +94,7 @@ abstract class BaseFragment : Fragment() {
 /**
  * TODO 这里进行各种初始化处理
  */
-abstract class BaseApplication : Application() {
+abstract class BaseApplication : RePluginApplication() {
 
     private val TIME_OUT: Long = 10
 
