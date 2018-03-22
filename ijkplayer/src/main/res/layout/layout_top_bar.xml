@@ -68,7 +68,6 @@
     <LinearLayout
         android:id="@+id/window_top_bar"
         android:gravity="center_vertical"
-        android:layout_marginTop="10px"
         android:paddingTop="10px"
         android:paddingBottom="10px"
         android:layout_width="match_parent"

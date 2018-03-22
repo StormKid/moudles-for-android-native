@@ -20,7 +20,6 @@ import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.*;
 import android.widget.*;
@@ -111,7 +110,11 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MSG_UPDATE_SEEK) {
-                final int pos = _setProgress();
+                int pos = 0;
+                if (mCurPosition==MAX_VIDEO_SEEK)
+                    pos = _setProgress(MAX_VIDEO_SEEK);
+                else
+                    pos = _setProgress(0);
                 if (!mIsSeeking && mIsShowBar && mVideoView.isPlaying()) {
                     // 这里会重复发送MSG，已达到实时更新 Seek 的效果
                     msg = obtainMessage(MSG_UPDATE_SEEK);
@@ -294,7 +297,12 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
             // 禁止翻转
             mOrientationListener.disable();
         }
-
+        mVideoView.setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(IMediaPlayer iMediaPlayer) {
+                _setProgress(1000);
+            }
+        });
     }
 
     @Override
@@ -312,7 +320,6 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
      * Activity.onResume() 里调用
      */
     public void onResume() {
-        Log.i("TTAG", "onResume");
         if (mIsScreenLocked) {
             // 如果出现锁屏则需要重新渲染器Render，不然会出现只有声音没有动画
             // 目前只在锁屏时会出现图像不动的情况，如果有遇到类似情况可以尝试按这个方法解决
@@ -334,7 +341,6 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
      * Activity.onPause() 里调用
      */
     public void onPause() {
-        Log.i("TTAG", "onPause");
         mCurPosition = mVideoView.getCurrentPosition();
         mVideoView.pause();
         mIvPlay.setSelected(false);
@@ -469,6 +475,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         mIvPlayCircle.setVisibility(GONE);
         if (mIsPlayComplete) {
             mIsPlayComplete = false;
+            mCurPosition = 0;
         }
         if (!mVideoView.isPlaying()) {
             mIvPlay.setSelected(true);
@@ -586,7 +593,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
             // 视频跳转
             seekTo((int) mTargetPosition);
             mTargetPosition = INVALID_VALUE;
-            _setProgress();
+            _setProgress(0);
             _showControlBar(DEFAULT_HIDE_TIMEOUT);
         }
     };
@@ -676,7 +683,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
      */
     private void _showControlBar(int timeout) {
         if (!mIsShowBar) {
-            _setProgress();
+            _setProgress(0);
             mIsShowBar = true;
         }
         _setControlBarVisible(true);
@@ -770,6 +777,12 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         }
     }
 
+
+    public void autoPlay() {
+        _togglePlayStatus();
+    }
+
+
     @Override
     public void onClick(View v) {
         _refreshHideRunnable();
@@ -802,7 +815,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
             seekTo(mSkipPosition);
             mHandler.removeCallbacks(mHideSkipTipRunnable);
             _hideSkipTip();
-            _setProgress();
+            _setProgress(0);
         } else if (id == R.id.tv_recover_screen) {
             mVideoView.resetVideoView(true);
             mIsNeedRecoverScreen = false;
@@ -1187,7 +1200,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
      *
      * @return
      */
-    private int _setProgress() {
+    private int _setProgress(long tag) {
         if (mVideoView == null || mIsSeeking) {
             return 0;
         }
@@ -1198,7 +1211,12 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         if (duration > 0) {
             // 转换为 Seek 显示的进度值
             long pos = (long) MAX_VIDEO_SEEK * position / duration;
-            mPlayerSeek.setProgress((int)pos);
+            if (tag == MAX_VIDEO_SEEK) {
+                pos = tag;
+                position = duration;
+                mCurPosition = MAX_VIDEO_SEEK;
+            }
+            mPlayerSeek.setProgress((int) pos);
         }
         // 获取缓冲的进度百分比，并显示在 Seek 的次进度
         int percent = mVideoView.getBufferPercentage();
