@@ -8,10 +8,9 @@ import com.moudle.basetool.utils.Constants.token
 /**
  * Created by ke_li on 2017/12/18.
  */
-class TokenUtil {
-    companion object {
+object TokenUtil {
         fun getToken(context: Context):String{
-            val token = SharePerfrenceUtil.get(context,token,"") as String
+            val token = SharePerfrenceUtil[context, token, ""] as String
             return if (TextUtils.isEmpty(token)) ""
             else token
         }
@@ -19,7 +18,10 @@ class TokenUtil {
         fun setToken(context: Context,token:String){
             SharePerfrenceUtil.put(context, Constants.token,token)
         }
-    }
 
+        fun putUserInfo(context: Context,userName:String,pwd:String){
+            SharePerfrenceUtil.put(context,Constants.USER_NAME,userName)
+            SharePerfrenceUtil.put(context,Constants.PWD,pwd)
+        }
 
 }

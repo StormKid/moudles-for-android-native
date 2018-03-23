@@ -182,7 +182,7 @@ public class CaptureActivity extends AppCompatActivity
         Intent resultIntent = new Intent();
         bundle.putInt("width", mCropRect.width());
         bundle.putInt("height", mCropRect.height());
-        bundle.putString("result", rawResult.getText());
+        bundle.putString(CameraManager.RESULT, rawResult.getText());
         resultIntent.putExtras(bundle);
 
         this.setResult(RESULT_OK, resultIntent);

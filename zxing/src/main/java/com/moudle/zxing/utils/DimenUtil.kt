@@ -49,9 +49,16 @@ class DimenUtil private constructor(context: Context) {
         return Math.round(getResultSize(size))
     }
 
+    fun getDimen(size: Int,textView: TextView) =  Math.round(getResultSize(size)).apply {
+        setTextSize(this,textView)
+    }
+
+
     fun setTextSize(size: Int, textView: TextView) {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResultSize(size))
     }
+
+
 
     fun getDefaltSize(textView: TextView) {
         setTextSize(DEFAULT_SIZE, textView)

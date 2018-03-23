@@ -19,7 +19,6 @@ import org.json.JSONObject
 class MyIntentCallback(val context: Context, private val tag: Any, private val callbackNormal: MyNormalNetCallback, private val refresh: SwipeRefreshLayout?) : StringCallback() {
 
     val NET_ERR = "网络不给力，请检查网络链接"
-
     override fun onFinish() {
         OkGo.getInstance().cancelTag(tag)
     }

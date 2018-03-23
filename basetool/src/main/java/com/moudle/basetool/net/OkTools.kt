@@ -53,6 +53,7 @@ class OkTools private constructor() {
         lateinit var myContext: Context
         lateinit var BASE_URL: String
         lateinit var refresh: SwipeRefreshLayout
+
     }
 
 

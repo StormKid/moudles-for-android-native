@@ -42,6 +42,7 @@ public class CameraManager {
 	private final CameraConfigurationManager configManager;
 	private Camera camera;
 	private AutoFocusManager autoFocusManager;
+	public static final String RESULT = "result";
 
 	private boolean initialized;
 	private boolean previewing;
