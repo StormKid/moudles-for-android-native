@@ -10,5 +10,6 @@ object Constants {
 
         const val USER_NAME = "USER_NAME"
         const val PWD = "PWD"
+        const val NICK_NAME = "NICK_NAME"
 
 }

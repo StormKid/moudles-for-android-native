@@ -19,9 +19,10 @@ object TokenUtil {
             SharePerfrenceUtil.put(context, Constants.token,token)
         }
 
-        fun putUserInfo(context: Context,userName:String,pwd:String){
+        fun putUserInfo(context: Context,userName:String,pwd:String,nickName:String){
             SharePerfrenceUtil.put(context,Constants.USER_NAME,userName)
             SharePerfrenceUtil.put(context,Constants.PWD,pwd)
+            SharePerfrenceUtil.put(context,Constants.NICK_NAME,nickName)
         }
 
 }

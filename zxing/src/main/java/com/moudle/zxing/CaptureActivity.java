@@ -34,7 +34,6 @@ import android.widget.TextView;
 import com.google.zxing.Result;
 import com.moudle.zxing.camera.CameraManager;
 import com.moudle.zxing.decode.DecodeThread;
-import com.moudle.zxing.utils.BeepManager;
 import com.moudle.zxing.utils.CaptureActivityHandler;
 import com.moudle.zxing.utils.DimenUtil;
 import com.moudle.zxing.utils.InactivityTimer;
@@ -54,7 +53,7 @@ public class CaptureActivity extends AppCompatActivity
     private CameraManager cameraManager;
     private CaptureActivityHandler handler;
     private InactivityTimer inactivityTimer;
-    private BeepManager beepManager;
+//    private BeepManager beepManager;
     private SurfaceView scanPreview = null;
     private RelativeLayout scanContainer;
     private RelativeLayout scanCropView;
@@ -77,7 +76,7 @@ public class CaptureActivity extends AppCompatActivity
         initView();
         initDimen();
         inactivityTimer = new InactivityTimer(this);
-        beepManager = new BeepManager(this);
+//        beepManager = new BeepManager(this);
         TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.9f);
         animation.setDuration(4500);
         animation.setRepeatCount(-1);
@@ -125,7 +124,7 @@ public class CaptureActivity extends AppCompatActivity
             handler = null;
         }
         inactivityTimer.onPause();
-        beepManager.close();
+//        beepManager.close();
         if (null!=cameraManager)
         cameraManager.closeDriver();
         if (!isHasSurface) {
@@ -177,7 +176,7 @@ public class CaptureActivity extends AppCompatActivity
      */
     public void handleDecode(Result rawResult, Bundle bundle) {
         inactivityTimer.onActivity();
-        beepManager.playBeepSoundAndVibrate();
+//        beepManager.playBeepSoundAndVibrate();
 
         Intent resultIntent = new Intent();
         bundle.putInt("width", mCropRect.width());

@@ -9,7 +9,7 @@
                                      android:layout_height="match_parent">
 
     <ImageView android:layout_width="@dimen/px_80" android:layout_height="@dimen/px_80"
-               android:id="@+id/item_iv" android:padding="@dimen/px_20"
+               android:id="@+id/item_iv" android:padding="@dimen/px_15"
     />
 
     <TextView android:layout_width="wrap_content"

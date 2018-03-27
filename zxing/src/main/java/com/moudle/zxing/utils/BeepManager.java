@@ -70,7 +70,7 @@ public class BeepManager implements MediaPlayer.OnCompletionListener, MediaPlaye
 		}
 		if (vibrate) {
 			Vibrator vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
-			vibrator.vibrate(VIBRATE_DURATION);
+//			vibrator.vibrate(VIBRATE_DURATION);
 		}
 	}
 

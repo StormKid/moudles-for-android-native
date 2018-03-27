@@ -458,11 +458,12 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
      * 设置只显示全屏状态
      */
     public IjkPlayerView alwaysFullScreen() {
-        mIsAlwaysFullScreen = true;
         _setFullScreen(true);
         mIvFullscreen.setVisibility(GONE);
-        mAttachActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         _setUiLayoutFullscreen();
+        _changeHeight(true);
+        mIsAlwaysFullScreen = true;
+        mAttachActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         return this;
     }
 
