@@ -12,7 +12,7 @@
                   android:layout_height="wrap_content">
     <ProgressBar android:layout_width="@dimen/px_80"
                  android:id="@+id/progress"
-                 android:indeterminateTint="@color/color_main"
+                 android:indeterminateTint="@android:color/white"
                  android:layout_height="@dimen/px_80"/>
     <TextView android:layout_width="wrap_content"
               android:text="加载中……"

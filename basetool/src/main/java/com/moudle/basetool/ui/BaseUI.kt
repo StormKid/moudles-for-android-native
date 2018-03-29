@@ -96,7 +96,7 @@ abstract class BaseFragment : Fragment() {
  */
 abstract class BaseApplication : Application() {
 
-    private val TIME_OUT: Long = 10
+    private val TIME_OUT: Long = 5000
 
     override fun onCreate() {
         super.onCreate()
@@ -118,9 +118,10 @@ abstract class BaseApplication : Application() {
         log.setPrintLevel(HttpLoggingInterceptor.Level.BODY)
         log.setColorLevel(Level.WARNING)
         client.addInterceptor(log)
-                .readTimeout(TIME_OUT, TimeUnit.SECONDS)
-                .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
-                .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
+                .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+                .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+                .writeTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+                .pingInterval(TIME_OUT,TimeUnit.MILLISECONDS)
                 .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
         return client.build()
     }

@@ -5,7 +5,6 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 /**
  * Created by ke_li on 2017/12/26.
@@ -23,7 +22,6 @@ class ImageUtil {
 
     private var margin :Int
 
-    private var cornerType : RoundedCornersTransformation.CornerType
 
     fun setUrl(url: Any?): ImageUtil {
         this.url = url
@@ -37,7 +35,6 @@ class ImageUtil {
         this.iv = ImageView(context)
         this.corner = 10
         this.margin = 0
-        this.cornerType = RoundedCornersTransformation.CornerType.ALL
     }
 
     fun setErr(id: Int): ImageUtil {
@@ -74,15 +71,6 @@ class ImageUtil {
     fun getCircleImage() {
         val circleCrop = RequestOptions.errorOf(resId).transform(CircleCrop())
         Glide.with(context).load(url).apply(circleCrop).into(iv)
-    }
-
-    /**
-     * 获得带圆角的图片
-     */
-    fun getCornerImage(){
-        val conner = RoundedCornersTransformation(corner,margin,cornerType )
-        val result = RequestOptions.errorOf(resId).transform(conner)
-        Glide.with(context).load(url).apply(result).into(iv)
     }
 
 
