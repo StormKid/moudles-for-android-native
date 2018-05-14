@@ -82,7 +82,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
     private LinearLayout mWindowTopBar;
     // 播放键
     private ImageView mIvPlay;
-    private ImageView mIvPlayCircle;
+    public ImageView mIvPlayCircle;
     // 当前时间
     private TextView mTvCurTime;
     // 进度条
@@ -540,6 +540,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
      */
     public void swichUrl(String url) {
         try {
+            mLoadingView.setVisibility(VISIBLE);
             mVideoView.reStopPlayback(url);
         } catch (IOException e) {
             stop();
@@ -945,7 +946,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (isFullscreen) {
             // 高度扩展为横向全屏
-            layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         } else {
             // 还原高度
             layoutParams.height = mInitHeight;
