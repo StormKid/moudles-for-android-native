@@ -264,6 +264,11 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         // 加载 IjkMediaPlayer 库
         IjkMediaPlayer.loadLibrariesOnce(null);
         IjkMediaPlayer.native_profileBegin("libijkplayer.so");
+//        mVideoView.setOption(1, "analyzemaxduration", 100L);
+//        mVideoView.setOption(1, "probesize", 10240L);
+//        mVideoView.setOption(1, "flush_packets", 1L);
+//        mVideoView.setOption(4, "packet-buffering", 0L);
+//        mVideoView.setOption(4, "framedrop", 1L);
         // 声音
         mAudioManager = (AudioManager) mAttachActivity.getSystemService(Context.AUDIO_SERVICE);
         mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -343,6 +348,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
     public void onPause() {
         mCurPosition = mVideoView.getCurrentPosition();
         mVideoView.pause();
+        mIvPlayCircle.setVisibility(VISIBLE);
         mIvPlay.setSelected(false);
         mOrientationListener.disable();
     }
@@ -1098,6 +1104,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
             }
             if (!mIsForbidTouch) {
                 _refreshHideRunnable();
+                if (!isExo)
                 _togglePlayStatus();
             }
             return true;
@@ -1458,11 +1465,24 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
             case MediaPlayerParams.STATE_COMPLETED:
                 pause();
                 mIsPlayComplete = true;
+                mIvPlayCircle.setVisibility(VISIBLE);
                 mLoadingView.setVisibility(View.GONE);
                 break;
 
         }
     }
+
+    private boolean isExo = false;
+    /**
+     * 如果是直播，调用此方法
+     */
+    public  void  insertExo(){
+        mLlBottomBar.setVisibility(GONE);
+    }
+
+
+
+
 
     /**============================ Listener ============================*/
 

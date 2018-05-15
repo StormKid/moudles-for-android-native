@@ -318,6 +318,8 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         }
         mRenderView.setTransform(mOriginalMatrix);
         mRenderView.setVideoRotation(mVideoRotationDegree);
+
+
     }
 
     /**
@@ -1048,7 +1050,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
                 if (mUri != null) {
                     ijkMediaPlayer = new IjkMediaPlayer();
                     ijkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
-
+                    ijkMediaPlayer.setOption(1, "analyzemaxduration", 100L);
+                    ijkMediaPlayer.setOption(1, "probesize", 10240L);
+                    ijkMediaPlayer.setOption(1, "flush_packets", 1L);
+                    ijkMediaPlayer.setOption(4, "packet-buffering", 0L);
+                    ijkMediaPlayer.setOption(4, "framedrop", 1L);
                     if (mIsUsingMediaCodec) {
                         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
                         if (mIsUsingMediaCodecAutoRotate) {
