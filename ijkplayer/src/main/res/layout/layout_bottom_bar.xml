@@ -62,6 +62,14 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"/>
 
+        <View android:layout_width="0px"
+              android:layout_weight="1"
+              android:visibility="gone"
+              android:layout_height="1px"
+              android:background="@android:color/transparent"
+              android:id="@+id/stock_view"
+        />
+
         <SeekBar
             android:id="@+id/player_seek"
             android:layout_width="0dp"

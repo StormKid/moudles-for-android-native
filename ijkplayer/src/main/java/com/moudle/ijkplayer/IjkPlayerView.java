@@ -19,6 +19,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.*;
@@ -181,6 +182,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
     private boolean isCheckWIFI;
     private Context context;
     private OnGetStartListener onStartListener;
+    private View mStockView;
 
 
     public IjkPlayerView(Context context) {
@@ -222,6 +224,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         mFlVideoBox = (FrameLayout) findViewById(R.id.fl_video_box);
         mIvPlayerLock = (ImageView) findViewById(R.id.iv_player_lock);
         mIvPlayCircle = (ImageView) findViewById(R.id.iv_play_circle);
+        mStockView = findViewById(R.id.stock_view);
         mTvRecoverScreen = (TextView) findViewById(R.id.tv_recover_screen);
         // 视频宽高比设置
         mTvSettings = (TextView) findViewById(R.id.tv_settings);
@@ -321,10 +324,11 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
 
     /**============================ 外部调用接口 ============================*/
 
+
     /**
      * Activity.onResume() 里调用
      */
-    public void onResume() {
+    public void onResume(String flag) {
         if (mIsScreenLocked) {
             // 如果出现锁屏则需要重新渲染器Render，不然会出现只有声音没有动画
             // 目前只在锁屏时会出现图像不动的情况，如果有遇到类似情况可以尝试按这个方法解决
@@ -335,7 +339,7 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         if (!mIsForbidTouch && !mIsForbidOrientation) {
             mOrientationListener.enable();
         }
-        if (mCurPosition != INVALID_VALUE) {
+        if (mCurPosition != INVALID_VALUE&&TextUtils.isEmpty(flag)) {
             // 重进后 seekTo 到指定位置播放时，通常会回退到前几秒，关键帧??
             seekTo(mCurPosition);
             mCurPosition = INVALID_VALUE;
@@ -553,7 +557,6 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
             mAttachActivity.finish();
         }
         if (!isPlaying()) {
-            setVideoPath(url);
             start();
         }
     }
@@ -1062,7 +1065,9 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
                 float deltaX = mOldX - e2.getX();
                 if (isDownTouch) {
                     // 判断左右或上下滑动
-                    isLandscape = Math.abs(distanceX) >= Math.abs(distanceY);
+                    if (isExo)isLandscape = false;
+                    else isLandscape = Math.abs(distanceX) >= Math.abs(distanceY);
+
                     // 判断是声音或亮度控制
                     isVolume = mOldX > getResources().getDisplayMetrics().widthPixels * 0.5f;
                     isDownTouch = false;
@@ -1104,7 +1109,6 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
             }
             if (!mIsForbidTouch) {
                 _refreshHideRunnable();
-                if (!isExo)
                 _togglePlayStatus();
             }
             return true;
@@ -1472,12 +1476,19 @@ public class IjkPlayerView extends FrameLayout implements View.OnClickListener {
         }
     }
 
+    /**
+     * 是否是直播
+     */
     private boolean isExo = false;
+
     /**
      * 如果是直播，调用此方法
      */
     public  void  insertExo(){
-        mLlBottomBar.setVisibility(GONE);
+        mPlayerSeek.setVisibility(GONE);
+        mTvEndTime.setVisibility(GONE);
+        mStockView.setVisibility(VISIBLE);
+        isExo = true;
     }
 
 
