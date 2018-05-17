@@ -3,6 +3,7 @@ package com.moudle.basetool.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -131,6 +132,9 @@ public class ItemView extends FrameLayout {
         else item_iv.setVisibility(INVISIBLE);
     }
 
+    public void setTitleColor (@ColorRes int res){
+        item_tv.setTextColor(ContextCompat.getColor(getContext(),res));
+    }
 
     public void setMidText(String middTitle) {
         item_tv.setText(middTitle);

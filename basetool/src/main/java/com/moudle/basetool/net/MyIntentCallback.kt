@@ -24,9 +24,23 @@ class MyIntentCallback(val context: Context, private val tag: Any, private val c
     }
 
     override fun onStart(request: Request<String, out Request<Any, Request<*, *>>>?) {
+
+//        val url = request?.url
+//        val parse = HttpUrl.parse(url ?: "")
         val token = TokenUtil.getToken(context)
-        if (token.isEmpty()) return
-        else request!!.headers(head, token)
+        if (token.isEmpty())
+        else request!!.headers(head, "sid=$token")
+
+//            Cookie.Builder().apply {
+//                this.name("sid").value(token).domain(parse?.host() ?: "").build().apply {
+//                    //                OkGo.getInstance().cookieJar.cookieStore.saveCookie(parse,this)
+////                    val cookies = OkGo.getInstance().okHttpClient.cookieJar().loadForRequest(parse)
+////                    cookies.add(this)
+//                    OkGo.getInstance().okHttpClient.cookieJar().saveFromResponse(parse, arrayListOf(this))
+//
+//                }
+//            }
+//        else request!!.cacheKey
         refresh?.post {
             if (!refresh.isRefreshing)
                 refresh.isRefreshing = true
@@ -40,21 +54,21 @@ class MyIntentCallback(val context: Context, private val tag: Any, private val c
                 val obj = JSONObject(response.body())
                 val message = obj.optString("msg")
                 val code = obj.optString("code")
-                    if (code == "0") {
-                        val result = obj.optString("result")
-                        if (TextUtils.isEmpty(result)) {
-                            callbackNormal.success("")
-                        } else {
-                            when {
-                                result[0].equals("{".toCharArray()[0], true) -> callbackNormal.success(result)
-                                result[0].equals("[".toCharArray()[0], true) -> callbackNormal.success("{\"result\":$result}")
-                                else -> callbackNormal.success(result)
-                            }
-                        }
+                if (code == "0") {
+                    val result = obj.optString("result")
+                    if (TextUtils.isEmpty(result)) {
+                        callbackNormal.success("")
                     } else {
-                        ManagerUtils.showToast(context, message)
-                        callbackNormal.err(message)
+                        when {
+                            result[0].equals("{".toCharArray()[0], true) -> callbackNormal.success(result)
+                            result[0].equals("[".toCharArray()[0], true) -> callbackNormal.success("{\"result\":$result}")
+                            else -> callbackNormal.success(result)
+                        }
                     }
+                } else {
+                    ManagerUtils.showToast(context, message)
+                    callbackNormal.err(message)
+                }
             }
         } else {
             ManagerUtils.showToast(context, NET_ERR)

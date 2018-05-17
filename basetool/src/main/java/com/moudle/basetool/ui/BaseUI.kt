@@ -100,14 +100,12 @@ abstract class BaseApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        //更新友盟统计
-        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "58d2886b3eae2509c3000b7d")
-        val ok = initOkHttpClient()
+//        //更新友盟统计
+//        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, "58d2886b3eae2509c3000b7d")
         OkGo.getInstance().init(this).setRetryCount(3)
-                .okHttpClient = ok
+                .okHttpClient = initOkHttpClient()
 
     }
-
 
     private fun initOkHttpClient(): OkHttpClient {
         var client: OkHttpClient.Builder = OkHttpClient.Builder()

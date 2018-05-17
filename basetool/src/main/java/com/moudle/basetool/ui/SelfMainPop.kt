@@ -25,7 +25,7 @@ abstract class SelfMainPop(private val context: Context) : PopupWindow() {
         update()
         val dw = ColorDrawable(ContextCompat.getColor(context, R.color.black_trans))
         setBackgroundDrawable(dw)
-        contentView.setOnClickListener { if (isShowing) dismiss()}
+        contentView.setOnClickListener { dismiss()}
     }
 
     @LayoutRes

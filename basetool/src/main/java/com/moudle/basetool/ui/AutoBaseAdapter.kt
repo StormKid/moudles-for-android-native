@@ -15,12 +15,12 @@ abstract class AutoBaseAdapter<M>(open val context: Context, open val arrayList:
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View = run{
         var view = convertView
-        val viewholder: Any?
+        val viewholder=
         if (view == null) {
             view = LayoutInflater.from(context).inflate(getLayout(), parent, false)
-            viewholder = ViewHolder(view)
+            ViewHolder(view)
         } else
-            viewholder = view.tag
+            view.tag
         AutoUtils.autoSize(view)
         initView(view!!, position)
         return view
