@@ -28,6 +28,16 @@
         <item name="android:background">@color/line_ccc</item>
     </style>
 
+    <!-- 底部动画显示界面 -->
+    <style name="AnimBottom" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+    </style>
+
+    <style name="ButtomAnim" parent="normalDialog">
+        <item name="android:windowAnimationStyle">@style/AnimBottom</item>
+    </style>
+
     <declare-styleable name="ItemView">
         <attr name="right_visible" format="boolean" />
         <attr name="left_visible" format="boolean"/>
