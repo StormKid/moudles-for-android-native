@@ -80,6 +80,10 @@ class OkHttpClientBuilder private constructor() : ClientRule {
      * 获取默认httpclient
      */
     override fun getHttpClient() = httpClient.apply {
+        /**
+         * 清理interceptors 防止重复添加
+         */
+        this.interceptors().clear()
         if (heads.size != 0) this.addInterceptor {
             val myhead = Headers.of(heads)
             val builder = it.request().newBuilder()

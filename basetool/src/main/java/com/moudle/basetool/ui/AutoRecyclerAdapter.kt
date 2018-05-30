@@ -1,4 +1,4 @@
-package com.xiami.repairg.widget
+package com.moudle.basetool.ui
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView

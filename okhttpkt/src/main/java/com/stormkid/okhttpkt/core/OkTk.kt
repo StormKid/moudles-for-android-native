@@ -1,5 +1,6 @@
 package com.stormkid.okhttpkt.core
 
+import android.util.Log
 import com.google.gson.Gson
 import com.stormkid.okhttpkt.rule.CallbackRule
 import com.stormkid.okhttpkt.rule.ClientRule
@@ -31,11 +32,6 @@ class OkTk private constructor() {
      */
     private var okHttpClient: OkHttpClient = OkHttpClientBuilder.Builder.build().getHttpClient().build()
 
-
-    /**
-     * 获取单独flag对象
-     */
-    private var flag = ""
 
     /**
      * 设置baseUrl
@@ -108,12 +104,25 @@ class OkTk private constructor() {
         }
     }
 
-    fun getHttpClient(): OkHttpClient {
+    /**
+     * 获取相应的对象
+     */
+    private fun getHttpClient(): OkHttpClient {
         if (isFactory) initNetType(OkHttpClientBuilder.Builder.build())
         return okHttpClient
     }
 
+    /**
+     * 更新头部布局
+     */
+    fun initHead(map: HashMap<String, String>): OkTk {
+        initNetType(OkHttpClientBuilder.Builder.setHead(map).build())
+        return this
+    }
+
+
     private fun initNetType(clientRule: ClientRule) {
+
         when (clientNetType) {
             HTTP_TYPE -> okHttpClient = clientRule.getHttpClient().build()
             HTTPS_TYPE -> okHttpClient = clientRule.getHttpsClient().build()
@@ -139,14 +148,6 @@ class OkTk private constructor() {
 
 
     /**
-     * 获取独有的请求标识,多连接的时候进行回调处理
-     */
-    fun setFlag(flag: String): OkTk {
-        this.flag = flag
-        return this
-    }
-
-    /**
      * 设置主体url
      */
     fun setBase(url: String): OkTk {
@@ -166,8 +167,14 @@ class OkTk private constructor() {
     inner class Builder {
         private var url = ""
         private val params = hashMapOf<String, String>()
-        private val body = hashMapOf<String,String>()
+        private val body = hashMapOf<String, String>()
         private var file = File("")
+        private var fileNameKey = ""
+        /**
+         * 获取单独flag对象
+         */
+        private var flag = ""
+
         /**
          * 输入url
          */
@@ -176,13 +183,20 @@ class OkTk private constructor() {
             return this
         }
 
+        /**
+         * 获取独有的请求标识,多连接的时候进行回调处理
+         */
+        fun setFlag(flag: String): Builder {
+            this.flag = flag
+            return this
+        }
 
         /**
          * 输入请求body
          */
-        fun putBody(params: HashMap<String, String>):Builder{
-            this.params.clear()
-            this.params.putAll(params)
+        fun putBody(params: HashMap<String, String>): Builder {
+            this.body.clear()
+            this.body.putAll(params)
             return this
         }
 
@@ -195,6 +209,15 @@ class OkTk private constructor() {
         }
 
         /**
+         * 传入fileNameKey
+         */
+        fun putFileNameKey(key: String): Builder {
+            this.fileNameKey = key
+            return this
+        }
+
+
+        /**
          * 传入url拼接属性
          */
         fun setParams(params: HashMap<String, String>): Builder {
@@ -203,51 +226,61 @@ class OkTk private constructor() {
             return this
         }
 
-        private fun <T>init(callbackRule: CallbackRule<T>): Request.Builder {
-            val url = url+initUrl(params)
+        private fun <T> init(callbackRule: CallbackRule<T>): Request.Builder {
+            val url = url + initUrl(params)
             val request = Request.Builder().url(url)
             return request
         }
 
 
-        fun <T>get(call: CallbackRule<T>) {
-            val request =  init(call).build()
-            getHttpClient().newCall(request).enqueue(OkCallback<T>(call, OkCallbackNeed(flag, error)))
+        fun <T> get(call: CallbackRule<T>) {
+            val request = init(call).build()
+            getHttpClient().newCall(request).enqueue(OkCallback(call, OkCallbackNeed(flag, error)))
         }
 
-        fun <T>post(call: CallbackRule<T>) {
+        fun <T> post(call: CallbackRule<T>) {
             val request = init(call)
             val requestBody = FormBody.Builder().apply {
-                 body.forEach {  this.add(it.key,it.value)  }
+                body.forEach { this.add(it.key, it.value) }
             }.build()
-            getHttpClient().newCall(request.post(requestBody).build()).enqueue(OkCallback<T>(call, OkCallbackNeed(flag, error)))
+            getHttpClient().newCall(request.post(requestBody).build()).enqueue(OkCallback(call, OkCallbackNeed(flag, error)))
         }
 
-        fun <T>postJson(call: CallbackRule<T>){
+        fun <T> postJson(call: CallbackRule<T>) {
             val request = init(call)
             val json = Gson().toJson(body)
-            val requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),json)
-            getHttpClient().newCall(request.post(requestBody).build()).enqueue(OkCallback<T>(call, OkCallbackNeed(flag, error)))
+            val requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+            getHttpClient().newCall(request.post(requestBody).build()).enqueue(OkCallback(call, OkCallbackNeed(flag, error)))
         }
 
-        fun <T>postFile(call: CallbackRule<T>){
+        fun <T> postFile(call: CallbackRule<T>) {
             val request = init(call)
-
+            if (file.exists()) {
+                val multipartBody = initFileBody(body).build()
+                getHttpClient().newCall(request.post(multipartBody).build()).enqueue(OkCallback(call, OkCallbackNeed(flag, error)))
+            }
         }
+
         private fun initUrl(map: HashMap<String, String>) = "".let {
             var onFirst = false
             var result = ""
             map.forEach {
-                if (onFirst) result+=("&${it.key}=${it.value}")
+                if (onFirst) result += ("&${it.key}=${it.value}")
                 else {
                     onFirst = true
-                    result+=("?${it.key}=${it.value}")
+                    result += ("?${it.key}=${it.value}")
                 }
             }
             result
         }
-    }
 
+        private fun initFileBody(map: HashMap<String, String>): MultipartBody.Builder = MultipartBody.Builder().setType(MultipartBody.FORM).apply {
+            map.forEach {
+                this.addFormDataPart(it.key, it.value)
+            }
+            this.addFormDataPart(fileNameKey, file.name, MultipartBody.create(MultipartBody.FORM, file))
+        }
+    }
 
 
 }

@@ -9,13 +9,13 @@ import java.util.*
  */
 object ApkUtil {
     fun getVersion(context:Context):String{
-        var version = "1.0.0"
+        var version = "1.0.1"
         try {
             val pm = context.packageManager
             val pi = pm.getPackageInfo(context.packageName, 0)
             version = pi.versionName
         } catch (e: Exception) {
-            LogUtil.logE(e.stackTrace.toString())
+            LogUtil.e(e.stackTrace.toString())
         }
         return version
     }

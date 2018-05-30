@@ -1,5 +1,7 @@
 package com.stormkid.okhttpkt.core
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.stormkid.okhttpkt.rule.CallbackRule
 import com.stormkid.okhttpkt.utils.GsonFactory
@@ -17,6 +19,7 @@ import java.lang.reflect.ParameterizedType
  */
 class OkCallback<T>(private val callbackRule: CallbackRule<T>, private val need: OkCallbackNeed) : Callback {
 
+    private val handler = Handler(Looper.getMainLooper())
     override fun onFailure(call: Call?, e: IOException?) {
         callbackRule.onFailed(need.err_msg)
         call!!.cancel()
@@ -26,7 +29,7 @@ class OkCallback<T>(private val callbackRule: CallbackRule<T>, private val need:
         if (null != response) {
             if (response.isSuccessful) {
                 if (null == response.body()) {
-                    callbackRule.onFailed(need.err_msg)
+                    handler.post {  callbackRule.onFailed(need.err_msg)}
                     return
                 } else {
                     val body = response.body()?.string() ?: ""
@@ -35,14 +38,15 @@ class OkCallback<T>(private val callbackRule: CallbackRule<T>, private val need:
                         val interfacesTypes = callbackRule.javaClass.genericInterfaces[0]
                         val resultType = (interfacesTypes as ParameterizedType).actualTypeArguments
                         val result = GsonFactory.formart<T>(body, resultType[0])
-                        callbackRule.onSuccess(result, need.flag)
+                        handler.post {   callbackRule.onSuccess(result, need.flag)}
                    }catch (e:Exception){
                         Log.e("typeEER",e.message)
-                        callbackRule.onFailed("数据服务异常，请联系管理员")
+                        handler.post {   callbackRule.onFailed("数据服务异常，请联系管理员")}
+                        return
                     }
                 }
-            } else callbackRule.onFailed(response.message())
-        } else callbackRule.onFailed(need.err_msg)
+            } else    handler.post { callbackRule.onFailed(response.message())}
+        } else    handler.post { callbackRule.onFailed(need.err_msg)}
         call!!.cancel()
     }
 

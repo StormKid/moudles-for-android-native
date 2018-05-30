@@ -11,21 +11,21 @@ open class LogUtil {
         private val isOpen: Boolean = true
         val tag = "myApp"
 
-        fun logE(msg: String) {
-            if (isOpen) logE(tag, msg)
+        fun e(msg: String) {
+            if (isOpen) e(tag, msg)
         }
 
 
-        fun logE(tag: String,msg: String ) {
+        fun e(tag: String, msg: String ) {
             if (isOpen) Log.e(tag, msg)
         }
 
-        fun LogI( tag: String,msg: String) {
+        fun I(tag: String, msg: String) {
             if (isOpen) Log.i(tag, msg)
         }
 
-        fun LogI(msg: String) {
-            if (isOpen) LogI(tag, msg)
+        fun I(msg: String) {
+            if (isOpen) I(tag, msg)
         }
 
         fun d(msg: String){
