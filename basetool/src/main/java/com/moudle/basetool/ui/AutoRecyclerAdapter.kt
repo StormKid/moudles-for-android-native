@@ -1,6 +1,7 @@
 package com.moudle.basetool.ui
 
 import android.content.Context
+import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.LayoutInflater
@@ -17,7 +18,7 @@ abstract class AutoRecyclerAdapter(private val context: Context) : Adapter<AutoR
         val view = LayoutInflater.from(context).inflate(getResourceId(), parent, false)
         return setViewHolder(view)
     }
-    abstract fun getResourceId(): Int
+   @LayoutRes abstract fun getResourceId(): Int
 
 
     abstract fun setViewHolder(view: View):AutoViewHolder
