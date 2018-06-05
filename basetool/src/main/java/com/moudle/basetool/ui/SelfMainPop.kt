@@ -36,7 +36,7 @@ abstract class SelfMainPop(private val context: Context) : PopupWindow() {
     override fun showAsDropDown(anchor: View?) {
         if (Build.VERSION.SDK_INT >= 24) {
             val rect = Rect()
-            anchor!!.getLocalVisibleRect(rect)
+            anchor!!.getWindowVisibleDisplayFrame(rect)
             val h = anchor.resources.displayMetrics.heightPixels-rect.bottom
             height = h
         }

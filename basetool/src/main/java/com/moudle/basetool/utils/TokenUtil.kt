@@ -25,4 +25,7 @@ object TokenUtil {
             SharePerfrenceUtil.put(context,Constants.NICK_NAME,nickName)
         }
 
+        fun checkToken(context: Context) = !TextUtils.isEmpty(getToken(context))
+
+
 }

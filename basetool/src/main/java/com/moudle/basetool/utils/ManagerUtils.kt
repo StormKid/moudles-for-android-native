@@ -56,8 +56,7 @@ object ManagerUtils {
       fun returnActivity(context: Context,clazz: Class<*>){
           val intent = Intent()
           intent.setClass(context,clazz)
-          intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK
-          intent.flags= Intent.FLAG_ACTIVITY_NEW_TASK
+          intent.flags=Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
           context.startActivity(intent)
       }
 
