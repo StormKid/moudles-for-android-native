@@ -10,7 +10,7 @@ import java.lang.reflect.Method
  * Created by ke_li on 2017/12/18.
  */
 object SharePerfrenceUtil {
-   private const val FILE_NAME = "video_plugin"
+   private const val FILE_NAME = "yghys"
 
     /**
      * 保存数据的方法，我们需要拿到保存数据的具体类型，然后根据类型调用不同的保存方法

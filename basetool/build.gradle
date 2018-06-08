@@ -31,7 +31,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:$sdk_version"
-    implementation 'com.yanzhenjie:permission:2.0.0-rc8'
+    api 'com.yanzhenjie:permission:2.0.0-rc8'
     //自适应布局
     api 'com.zhy:autolayout:1.+'
     api "com.android.support:recyclerview-v7:$sdk_version"
