@@ -38,6 +38,10 @@
         <item name="android:windowAnimationStyle">@style/AnimBottom</item>
     </style>
 
+    <style name="transDialog" parent="trans_dialog">
+        <item name="android:windowAnimationStyle">@style/AnimBottom</item>
+    </style>
+
     <declare-styleable name="ItemView">
         <attr name="right_visible" format="boolean" />
         <attr name="left_visible" format="boolean"/>

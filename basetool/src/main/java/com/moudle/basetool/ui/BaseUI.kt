@@ -1,5 +1,6 @@
 package com.moudle.basetool.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.zhy.autolayout.AutoLayoutActivity
 import org.simple.eventbus.EventBus
+import android.view.inputmethod.InputMethodManager
 
 
 /**
@@ -35,7 +37,19 @@ abstract class BaseActivity : AutoLayoutActivity() {
 
     protected abstract fun initEvent()
 
+    override fun finish() {
+        hintKbTwo()
+        super.finish()
+    }
 
+    private fun hintKbTwo() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (imm.isActive && currentFocus != null) {
+            if (currentFocus!!.windowToken != null) {
+                imm.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+        }
+    }
 
 }
 
