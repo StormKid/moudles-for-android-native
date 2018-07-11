@@ -1,7 +1,5 @@
 package com.stormkid.litepal
 
-import com.stormkid.litepal.pinyin.CN
-import com.stormkid.selecttagview.util.SupportEntity
 import org.litepal.annotation.Column
 import org.litepal.crud.LitePalSupport
 
@@ -14,9 +12,7 @@ import org.litepal.crud.LitePalSupport
 /**
  * 城市
  */
-data class City(@Column(unique = true) override var id: String="",
-                override var isChoose: Boolean=false,
-                override var name: String = "", var code: String = "")
-    : LitePalSupport(), SupportEntity, CN {
-    override fun chinese(): String = name
-}
+data class City(@Column(unique = true)  var id: String="",
+                 var isChoose: Boolean=false,
+                 var name: String = "", var code: String = "")
+    : LitePalSupport()
