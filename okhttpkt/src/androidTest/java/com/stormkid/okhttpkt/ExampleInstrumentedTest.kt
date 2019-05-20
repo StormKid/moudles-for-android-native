@@ -19,4 +19,5 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getTargetContext()
         assertEquals("com.yghys.doctor", appContext.packageName)
     }
+
 }

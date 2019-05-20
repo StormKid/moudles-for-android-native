@@ -18,4 +18,8 @@ object GsonFactory{
     fun <T> formart(json: String, type: Type): T {
         return gson.fromJson<T>(json, type)
     }
+
+    fun toJson(body:Any)=let {
+        gson.toJson(body)
+    }
 }

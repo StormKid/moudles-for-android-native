@@ -11,10 +11,10 @@ interface CallbackRule <in T>{
      * @entity 请求返回的json实体
      * @flag 同一个页面设置不同请求
      */
-    fun  onSuccess(entity:T,flag:String)
+   suspend fun  onSuccess(entity:T,flag:String)
 
     /**
      * 请求失败
      */
-    fun onFailed(error:String)
+    suspend fun onFailed(error:String)
 }

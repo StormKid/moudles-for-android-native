@@ -1,11 +1,24 @@
 package com.stormkid.okhttpkt.core
 
-import android.util.Log
+import android.app.DownloadManager
+import android.content.Context
+import android.net.Uri
+import android.os.Environment
 import com.google.gson.Gson
+import com.stormkid.okhttpkt.utils.CallbackNeed
 import com.stormkid.okhttpkt.rule.CallbackRule
 import com.stormkid.okhttpkt.rule.ClientRule
+import com.stormkid.okhttpkt.rule.DownLoadRule
+import com.stormkid.okhttpkt.rule.ProGressRule
+import com.stormkid.okhttpkt.utils.FileCallbackNeed
+import com.stormkid.okhttpkt.utils.FileResponseBody
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import java.io.File
+import java.lang.Exception
 
 /**
 分别启动工厂模式创建更多okhttpclient或者启动单例模式的okhttpclient
@@ -112,6 +125,8 @@ class OkTk private constructor() {
         return okHttpClient
     }
 
+    private fun getFactoryClient() = OkHttpClientBuilder.Builder.build().getHttpClient().build()
+
     /**
      * 更新头部布局
      */
@@ -156,6 +171,11 @@ class OkTk private constructor() {
     }
 
     /**
+     * 获取主体url
+     */
+    fun getBase() = this.baseUrl
+
+    /**
      * 设置错误信息
      */
     fun setErr(err: String): OkTk {
@@ -169,7 +189,8 @@ class OkTk private constructor() {
         private val params = hashMapOf<String, String>()
         private val body = hashMapOf<String, String>()
         private var file = File("")
-        private var fileNameKey = ""
+        private var filePath = ""
+        private var fileNameKey = "file"
         /**
          * 获取单独flag对象
          */
@@ -182,6 +203,15 @@ class OkTk private constructor() {
             this.url = baseUrl + url
             return this
         }
+
+        /**
+         * 输入的全部url
+         */
+        fun setFullUrl(url: String): Builder {
+            this.url = url
+            return this
+        }
+
 
         /**
          * 获取独有的请求标识,多连接的时候进行回调处理
@@ -208,6 +238,11 @@ class OkTk private constructor() {
             return this
         }
 
+        fun setFilePath(filePath: String): Builder {
+            this.filePath = filePath
+            return this
+        }
+
         /**
          * 传入fileNameKey
          */
@@ -226,7 +261,7 @@ class OkTk private constructor() {
             return this
         }
 
-        private fun <T> init(callbackRule: CallbackRule<T>): Request.Builder {
+        private fun init(): Request.Builder {
             val url = url + initUrl(params)
             val request = Request.Builder().url(url)
             return request
@@ -234,32 +269,60 @@ class OkTk private constructor() {
 
 
         fun <T> get(call: CallbackRule<T>) {
-            val request = init(call).build()
-            getHttpClient().newCall(request).enqueue(OkCallback(call, OkCallbackNeed(flag, error)))
+            val request = init().build()
+            getHttpClient().newCall(request).enqueue(OkCallback(call, CallbackNeed(flag, error)))
         }
 
         fun <T> post(call: CallbackRule<T>) {
-            val request = init(call)
+            val request = init()
             val requestBody = FormBody.Builder().apply {
                 body.forEach { this.add(it.key, it.value) }
             }.build()
-            getHttpClient().newCall(request.post(requestBody).build()).enqueue(OkCallback(call, OkCallbackNeed(flag, error)))
+            getHttpClient().newCall(request.post(requestBody).build()).enqueue(OkCallback(call, CallbackNeed(flag, error)))
         }
 
         fun <T> postJson(call: CallbackRule<T>) {
-            val request = init(call)
+            val request = init()
             val json = Gson().toJson(body)
             val requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
-            getHttpClient().newCall(request.post(requestBody).build()).enqueue(OkCallback(call, OkCallbackNeed(flag, error)))
+            getHttpClient().newCall(request.post(requestBody).build()).enqueue(OkCallback(call, CallbackNeed(flag, error)))
         }
 
+        fun <T> postJson(json: String, call: CallbackRule<T>) {
+            val request = init()
+            val requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json)
+            getHttpClient().newCall(request.post(requestBody).build()).enqueue(OkCallback(call, CallbackNeed(flag, error)))
+        }
+
+        /**
+         * 直传文件
+         */
         fun <T> postFile(call: CallbackRule<T>) {
-            val request = init(call)
+            val request = init()
             if (file.exists()) {
                 val multipartBody = initFileBody(body).build()
-                getHttpClient().newCall(request.post(multipartBody).build()).enqueue(OkCallback(call, OkCallbackNeed(flag, error)))
+//                val resultBody = FileResuestBody(multipartBody,call)
+                setTimeOut(60000)
+                getFactoryClient().newCall(request.post(multipartBody).build()).enqueue(OkCallback(call, CallbackNeed(flag, error)))
             }
         }
+
+
+        /**
+         * 下载文件
+         */
+        fun downLoad(context: Context, proGressRule: ProGressRule) {
+            val request = init()
+            val fileCallbackNeed = FileCallbackNeed(filePath, context, 0)
+            runBlocking { launch(Dispatchers.Main) { proGressRule.onStartRequest() } }
+            setTimeOut(60000)
+            getFactoryClient().newBuilder().addNetworkInterceptor { chain ->
+                val response = chain.proceed(chain.request())
+                val body = FileResponseBody(response.body()!!, fileCallbackNeed, proGressRule)
+                response.newBuilder().body(body).build()
+            }.build().newCall(request.build()).enqueue(com.stormkid.okhttpkt.asyc.DownloadManager(fileCallbackNeed, proGressRule))
+        }
+
 
         private fun initUrl(map: HashMap<String, String>) = "".let {
             var onFirst = false
@@ -279,6 +342,47 @@ class OkTk private constructor() {
                 this.addFormDataPart(it.key, it.value)
             }
             this.addFormDataPart(fileNameKey, file.name, MultipartBody.create(MultipartBody.FORM, file))
+        }
+
+    }
+
+    // 系统下载器下载apk文件
+    fun download(url: String, title: String, desc: String, context: Context,downLoadRule: DownLoadRule) = let {
+        val uri = Uri.parse(url)
+        val req = DownloadManager.Request(uri).apply {
+            //设置WIFI下进行更新
+            setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI)
+            //下载中和下载完后都显示通知栏
+            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            //使用系统默认的下载路径 此处为应用内 /android/data/packages ,所以兼容7.0
+            setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, title)
+            //通知栏标题
+            setTitle(title)
+            //通知栏描述信息
+            setDescription(desc)
+            //设置类型为.apk
+            setMimeType("application/vnd.android.package-archive")
+
+
+        }
+
+        //获取下载任务ID
+        val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        try {
+            dm.enqueue(req)
+        }catch (exception:Exception){
+            downLoadRule.onNetErr()
+            -1L
+        }
+
+    }
+
+    fun checkId(id: Long, context: Context) {
+        val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        try {
+            dm.remove(id)
+        } catch (exception: Exception) {
+
         }
     }
 
