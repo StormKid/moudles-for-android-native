@@ -7,7 +7,7 @@ import com.alipay.sdk.app.PayTask
 /**
  * Created by ke_li on 2017/12/25.
  */
-class PayTask constructor(val context: Activity, val callback: PayResult) : AsyncTask<String, Int, Map<String, String>>() {
+class PayTask constructor(private val context: Activity,private val callback: PayResult) : AsyncTask<String, Int, Map<String, String>>() {
 
      lateinit var pay:PayTask
 
