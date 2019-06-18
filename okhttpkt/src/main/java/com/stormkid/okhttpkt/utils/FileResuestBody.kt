@@ -2,8 +2,6 @@ package com.stormkid.okhttpkt.utils
 
 import com.stormkid.okhttpkt.rule.ProGressRule
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.android.Main
-import kotlinx.coroutines.android.UI
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType

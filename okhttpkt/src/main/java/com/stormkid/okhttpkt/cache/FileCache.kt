@@ -2,7 +2,6 @@ package com.stormkid.okhttpkt.cache
 
 import android.content.Context
 import android.os.Environment
-import android.os.Environment.MEDIA_MOUNTED
 import java.io.File
 
 
@@ -35,4 +34,6 @@ object FileCache {
             context.cacheDir.path
         }
     }
+
+    fun getExternalPath(context: Context) = context.packageResourcePath
 }

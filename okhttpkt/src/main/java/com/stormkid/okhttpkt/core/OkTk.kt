@@ -2,23 +2,23 @@ package com.stormkid.okhttpkt.core
 
 import android.app.DownloadManager
 import android.content.Context
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Environment
 import com.google.gson.Gson
-import com.stormkid.okhttpkt.utils.CallbackNeed
+import com.stormkid.okhttpkt.asyc.DownloadCallback
 import com.stormkid.okhttpkt.rule.CallbackRule
 import com.stormkid.okhttpkt.rule.ClientRule
 import com.stormkid.okhttpkt.rule.DownLoadRule
 import com.stormkid.okhttpkt.rule.ProGressRule
+import com.stormkid.okhttpkt.utils.CallbackNeed
 import com.stormkid.okhttpkt.utils.FileCallbackNeed
 import com.stormkid.okhttpkt.utils.FileResponseBody
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.android.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.*
 import java.io.File
-import java.lang.Exception
 
 /**
 分别启动工厂模式创建更多okhttpclient或者启动单例模式的okhttpclient
@@ -363,11 +363,11 @@ class OkTk private constructor() {
             //设置类型为.apk
             setMimeType("application/vnd.android.package-archive")
 
-
         }
 
         //获取下载任务ID
         val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        context.registerReceiver(DownloadCallback(downLoadRule), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
         try {
             dm.enqueue(req)
         }catch (exception:Exception){

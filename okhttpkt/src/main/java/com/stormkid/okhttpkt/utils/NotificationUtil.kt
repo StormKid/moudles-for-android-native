@@ -1,17 +1,15 @@
 package com.stormkid.okhttpkt.utils
 
+import android.app.Notification
 import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.ContextWrapper
-import android.app.NotificationManager
-import android.app.Notification
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.support.annotation.DrawableRes
-import android.support.v4.app.NotificationCompat
 import android.text.TextUtils
-import com.stormkid.okhttpkt.R
+import androidx.annotation.DrawableRes
+import androidx.core.app.NotificationCompat
 
 
 /**

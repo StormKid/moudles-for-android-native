@@ -1,11 +1,10 @@
 package com.stormkid.okhttpkt.core
 
 import android.util.Log
-import com.stormkid.okhttpkt.utils.CallbackNeed
 import com.stormkid.okhttpkt.rule.CallbackRule
+import com.stormkid.okhttpkt.utils.CallbackNeed
 import com.stormkid.okhttpkt.utils.GsonFactory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.android.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.Call
@@ -23,12 +22,12 @@ import java.lang.reflect.ParameterizedType
 class OkCallback<T>(private val callbackRule: CallbackRule<T>, private val need: CallbackNeed) : Callback {
 
 
-    override fun onFailure(call: Call?, e: IOException?) {
+    override fun onFailure(call: Call, e: IOException) {
         runBlocking { launch(Dispatchers.Main){ callbackRule.onFailed(need.err_msg)}}
         call!!.cancel()
     }
 
-    override fun onResponse(call: Call?, response: Response?) {
+    override fun onResponse(call: Call, response: Response) {
         if (null != response) {
             if (response.isSuccessful) {
                 if (null == response.body()) {

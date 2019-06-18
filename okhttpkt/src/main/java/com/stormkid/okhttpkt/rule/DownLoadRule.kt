@@ -1,6 +1,7 @@
 package com.stormkid.okhttpkt.rule
 
-import java.io.File
+import android.content.BroadcastReceiver
+import android.net.Uri
 
 /**
 
@@ -8,7 +9,7 @@ import java.io.File
 @date 2018/11/19
  */
 interface DownLoadRule {
-    fun onFinished(file:File)
+    fun onFinished(uri: Uri?,broadcastReceiver: BroadcastReceiver)
 
     fun onNetErr()
 }

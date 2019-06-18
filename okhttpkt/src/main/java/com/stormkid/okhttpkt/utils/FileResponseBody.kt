@@ -1,10 +1,8 @@
 package com.stormkid.okhttpkt.utils
 
-import android.util.Log
 import com.stormkid.okhttpkt.cache.FileCache
 import com.stormkid.okhttpkt.rule.ProGressRule
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.android.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType
@@ -14,7 +12,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
-import kotlin.math.log
 
 
 /**
@@ -62,7 +59,7 @@ class FileResponseBody(private val responseBody: ResponseBody,private val fileCa
      */
     private fun writeFile(inputStream: InputStream) {
         val byte = ByteArray(2048)
-        val path = FileCache.getDiskCachePath(fileCallbackNeed.context) + "/" + fileCallbackNeed.selfPath
+        val path = FileCache.getExternalPath(fileCallbackNeed.context) + "/" + fileCallbackNeed.selfPath
         val fileOutputStream = FileOutputStream(path)
         var len = 0
         var current = 0L
